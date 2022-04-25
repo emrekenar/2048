@@ -1,19 +1,20 @@
 from state import State
-from constants import SUCCESS, GAME_OVER, QUIT
+from constants import SUCCESS, GAME_OVER, QUIT, default_probabilities, default_size
 from utils import request_move
 from os import system
 
 
 class Game:
-    def __init__(self, sz=4, p4=0.1):
-        self.sz = sz
-        self.p2 = 1 - p4
-        self.p4 = p4
+    def __init__(self, sz=None, p=None):
+        if p is None:
+            self.p = default_probabilities
+        if sz is None:
+            self.sz = default_size
 
         self.powers = {i: 2 ** i for i in range(16)}
         self.moves = {0: '->', 1: 'v', 2: '<-', 3: '^'}
 
-        self.state = State(sz=sz, p2=self.p2, p4=p4)
+        self.state = State(sz=self.sz, p=self.p)
 
         for _ in range(2):
             self.state.generate_number()

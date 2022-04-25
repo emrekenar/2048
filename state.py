@@ -3,24 +3,27 @@ from random import randrange
 
 
 class State:
-    def __init__(self, grid=None, score=0, sz=4, p2=0.9, p4=0.1):
+    def __init__(self, grid=None, score=0, sz=None, p=None):
         if grid is None:
             self.grid = [0 for _ in range(sz ** 2)]
         else:
             self.grid = grid
         self.score = score
         self.sz = sz
-        self.p2 = p2
-        self.p4 = p4
+        self.p = p
+
+    def get_empty_indices(self):
+        empty_indices = [i for i in range(self.sz ** 2) if self.grid[i] == 0]
+        return empty_indices
 
     def new_index(self):
-        empty_indices = [i for i in range(self.sz ** 2) if self.grid[i] == 0]
+        empty_indices = self.get_empty_indices()
         index = empty_indices[randrange(len(empty_indices))]
         return index
 
     def new_number(self):
-        number_space = [1 for _ in range(int(self.p2 * 20))]
-        for i in range(int(self.p4 * 20)):
+        number_space = [1 for _ in range(int(self.p[1] * 20))]
+        for i in range(int(self.p[2] * 20)):
             number_space.append(2)
         n = number_space[randrange(len(number_space))]
         return n
@@ -36,7 +39,7 @@ class State:
 
         for row in range(self.sz):
             # eliminate 0s
-            new_row = [p for p in self.grid[self.sz*row:self.sz*(row+1)] if p != 0]
+            new_row = [i for i in self.grid[self.sz*row:self.sz*(row+1)] if i != 0]
 
             i = 0
             while i < len(new_row) - 1:
@@ -58,7 +61,7 @@ class State:
 
         # create the new state
         new_score = self.score + utility * 10
-        new_state = State(new_grid, new_score, self.sz, self.p2, self.p4)
+        new_state = State(new_grid, new_score, self.sz, self.p)
 
         return new_state
 
@@ -68,7 +71,7 @@ class State:
 
         for row in range(self.sz):
             # eliminate 0s
-            new_row = [p for p in self.grid[self.sz * row:self.sz * (row + 1)] if p != 0]
+            new_row = [i for i in self.grid[self.sz * row:self.sz * (row + 1)] if i != 0]
 
             i = len(new_row) - 1
             while i > 0:
@@ -92,7 +95,7 @@ class State:
 
         # create the new state
         new_score = self.score + utility * 10
-        new_state = State(new_grid, new_score, self.sz, self.p2, self.p4)
+        new_state = State(new_grid, new_score, self.sz, self.p)
 
         return new_state
 
@@ -128,7 +131,7 @@ class State:
 
         # create the new state
         new_score = self.score + utility * 10
-        new_state = State(new_grid, new_score, self.sz, self.p2, self.p4)
+        new_state = State(new_grid, new_score, self.sz, self.p)
 
         return new_state
 
@@ -166,7 +169,7 @@ class State:
 
         # create the new state
         new_score = self.score + utility * 10
-        new_state = State(new_grid, new_score, self.sz, self.p2, self.p4)
+        new_state = State(new_grid, new_score, self.sz, self.p)
 
         return new_state
 
